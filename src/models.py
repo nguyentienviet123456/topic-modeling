@@ -192,10 +192,11 @@ class LDAModel:
         """
         :param document: preprocessed document
         """
+        model = gensim.models.wrappers.ldamallet.malletmodel2ldamodel(self.lda_model)
         document_corpus = next(make_texts_corpus([sentence]))
         corpus = self.id2word.doc2bow(document_corpus)
         document_dist = np.array(
-            [tup[1] for tup in self.lda_model.get_document_topics(bow=corpus)]
+            [tup[1] for tup in model.get_document_topics(bow=corpus)]
         )
         return corpus, document_dist
 
@@ -209,7 +210,8 @@ class LDAModel:
         https://radimrehurek.com/gensim/models/ldamodel.html#usage-examples
         https://radimrehurek.com/gensim/wiki.html#latent-dirichlet-allocation
         """
-        self.lda_model.update(new_corpus)
+        model = gensim.models.wrappers.ldamallet.malletmodel2ldamodel(self.lda_model)
+        model.update(new_corpus)
         # get topic probability distribution for documents
         for corpus in new_corpus:
             yield self.lda_model[corpus]

@@ -158,7 +158,7 @@ class LDAModel:
         self.lda_model = gensim.models.wrappers.LdaMallet(
             mallet_path, 
             corpus=self.corpus, 
-            num_topics=3, 
+            num_topics=self.num_topics, 
             id2word=self.id2word)
         print("===done training===")
         self.lda_model.save(PATH_LDA_MODEL)
@@ -172,11 +172,11 @@ class LDAModel:
         df_dominant_topic.columns = ['Document_No', 'Dominant_Topic', 'Topic_Perc_Contrib', 'Keywords', 'Text']
 
         # load csv
-        df = pd.read_csv('dantri.csv')
+        df = pd.read_csv('data.csv')
         df['cluster'] = df_dominant_topic.Dominant_Topic
         df['score'] = df_dominant_topic.Topic_Perc_Contrib
         df['keywords'] = df_dominant_topic.Keywords
-        df.to_csv('dantri.csv')
+        df.to_csv('result.csv')
 
         self.picture()
 
